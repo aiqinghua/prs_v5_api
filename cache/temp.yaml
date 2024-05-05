@@ -1,0 +1,8 @@
+flinkCluster:
+- 'true'
+monitorActionEnable:
+- 'true'
+hostname:
+- prs-sensor
+ip:
+- 10.0.81.54
