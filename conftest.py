@@ -4,8 +4,13 @@
 # @File : conftest
 # @Project : prs_v5
 # conftest.py
+import logging
 import pytest
 
+
+def pytest_collection_modifyitems(session, config, items):
+    logging.info("收集到的测试用例为：{}".format(items))
+    logging.info(f"收集到的用例数量为：{len(items)}")
 
 @pytest.hookimpl
 def pytest_configure(config):
