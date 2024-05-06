@@ -1,5 +1,14 @@
-# 接口自动化测试框架 pytest+requests+allure+yaml+excle
+# 接口自动化测试框架 python+pytest+requests+allure+log+mysql+clickhouse+yaml+excle
 ## 使用说明
+### 安装说明
++ 首先，执行本框架之后，需要搭建好 python、jdk、 allure环境
++ 搭建python教程：http://c.biancheng.net/view/4161.html
++ 搭建jdk环境：https://www.cnblogs.com/zll-wyf/p/15095664.html
++ 安装allure：https://blog.csdn.net/m0_49225959/article/details/117194318
++ 如上环境如都搭建好，则安装本框架的所有第三方库依赖，执行如下命令：
+```text
+pip install -r requirements.txt
+```
 ### 配置文件修改
 + 修改配置文件config/config.ini配置文件，将测试环境改为自己测试环境
 + 数据库连接配置在config/config.ini配置文件
