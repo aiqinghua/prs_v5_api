@@ -16,9 +16,9 @@ class TestAttackChain:
     @allure.feature("安全总览")
     @pytest.mark.parametrize(argnames="cases", argvalues=HandleExcle(file_path() + "/data/SecurityOverview.xlsx", "attackChain").read_data())
     def test_attackchain(self, cases,start_up):
-        casename, row, url, method, headers, request_type, data, expected, \
+        interface, casename, row, url, method, headers, request_type, data, expected, \
         redis_client, ck_client, risk_table, sendrequest = start_up
-        allure.dynamic.story("攻击链")
+        allure.dynamic.story(interface)
         allure.dynamic.title(casename)
         with allure.step("清空redis缓存"):
             redis_key = cases["redis_key"]

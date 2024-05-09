@@ -20,10 +20,11 @@ class TestAttacker:
     @allure.feature("安全总览")
     @pytest.mark.parametrize(argnames="cases", argvalues=HandleExcle(file_path() + "/data/SecurityOverview.xlsx", "attacker").read_data())
     def test_attacker(self, cases, start_up):
-        casename, row, url, method, headers, request_type, data, expected, \
+        interface, casename, row, url, method, headers, request_type, data, expected, \
         redis_client, ck_client, risk_table, sendrequest = start_up
-        allure.dynamic.story("攻击者")
-        # 动态设置报告中的用例名称
+
+        # 动态设置报告
+        allure.dynamic.story(interface)
         allure.dynamic.title(casename)
         with allure.step("清空redis缓存"):
             if cases["redis_key"] != None:

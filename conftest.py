@@ -41,6 +41,8 @@ def start_up(cases):
     # 实例化CK对象
     ck_client = HandlerCk("/config/config.ini")
     # 获取请求数据
+    # 界面名称
+    interface = cases["interface"]
     # 用例名称
     casename = cases["casename"]
     # 获取行号
@@ -66,7 +68,7 @@ def start_up(cases):
             data = eval(data)
     # 获取预期结果
     expected = eval(cases["expected"])
-    yield casename, row, url, method, headers, request_type, data, expected, \
+    yield interface, casename, row, url, method, headers, request_type, data, expected, \
           redis_client, ck_client, risk_table, sendrequest
 
 
