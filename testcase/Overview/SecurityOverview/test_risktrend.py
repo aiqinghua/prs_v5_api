@@ -10,13 +10,13 @@ from utils.path_util import file_path
 from utils.excle_utli import HandleExcle
 
 @allure.epic("总览")
-@allure.feature("安全总览")
-@allure.story("风险趋势图")
 class TestRiskTrend:
+    @allure.feature("安全总览")
     @pytest.mark.parametrize(argnames="cases", argvalues=HandleExcle(file_path() + "/data/SecurityOverview.xlsx", "riskTrend").read_data())
     def test_risktrend(self, cases, start_up):
         casename, row, url, method, headers, request_type, data, expected, \
         redis_client, ck_client, risk_table, sendrequest = start_up
+        allure.dynamic.story("风险趋势图")
         # 动态设置报告中的用例名称
         allure.dynamic.title(casename)
         with allure.step("发送请求"):

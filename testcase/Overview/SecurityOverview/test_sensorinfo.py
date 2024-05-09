@@ -11,13 +11,13 @@ from utils.excle_utli import HandleExcle
 
 
 @allure.epic("总览")
-@allure.feature("安全总览")
-@allure.story("sensor")
 class TestSensorInfo:
+    @allure.feature("安全总览")
     @pytest.mark.parametrize(argnames="cases", argvalues=HandleExcle(file_path() + "/data/SecurityOverview.xlsx", "sensorinfo").read_data())
     def test_sensorinfo(self, cases, start_up):
         casename, row, url, method, headers, request_type, data, expected, \
         redis_client, ck_client, risk_table, sendrequest = start_up
+        allure.dynamic.story("sensor")
         # 动态设置报告中的用例名称
         allure.dynamic.title(casename)
         with allure.step("发送请求"):
