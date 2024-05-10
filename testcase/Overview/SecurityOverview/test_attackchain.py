@@ -9,17 +9,18 @@ import allure
 from utils.path_util import file_path
 from utils.excle_utli import HandleExcle
 from utils.ck_result_tools import ck_result_tool
+from utils.allure_util import HandleAllure
 
 
 @allure.epic("总览")
 class TestAttackChain:
-    @allure.feature("安全总览")
     @pytest.mark.parametrize(argnames="cases", argvalues=HandleExcle(file_path() + "/data/SecurityOverview.xlsx", "attackChain").read_data())
     def test_attackchain(self, cases,start_up):
-        interface, casename, row, url, method, headers, request_type, data, expected, \
-        redis_client, ck_client, risk_table, sendrequest = start_up
-        allure.dynamic.story(interface)
-        allure.dynamic.title(casename)
+        module, interface, casename, row, url, method, headers, request_type, data, expected, \
+        redis_client, ck_client, risk_table, sendrequest, yaml_util = start_up
+        # 动态设置报告
+        HandleAllure.dynamic_allure(feature=module, story=interface, title=casename)
+
         with allure.step("清空redis缓存"):
             redis_key = cases["redis_key"]
             redis_client.redis_del(keys=redis_key)

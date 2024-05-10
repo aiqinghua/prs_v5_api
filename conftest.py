@@ -14,7 +14,7 @@ from utils.redis_util import HandleRedis
 from utils.replace_data_util import HandleData
 from utils.send_request_util import SendRequest
 from utils.time_util import HandlerTime
-
+from utils.yaml_util import YamlUtil
 
 
 def pytest_collection_modifyitems(session, config, items):
@@ -40,7 +40,11 @@ def start_up(cases):
     redis_client = HandleRedis("/config/config.ini")
     # 实例化CK对象
     ck_client = HandlerCk("/config/config.ini")
+    # 实例化yanm对象
+    yaml_util = YamlUtil(server_conf.get_str(section="yaml", option="temp_yaml"))
     # 获取请求数据
+    # 模块名称
+    module = cases["module"]
     # 界面名称
     interface = cases["interface"]
     # 用例名称
@@ -64,12 +68,15 @@ def start_up(cases):
             """
             进行热加载处理
             """
-            data = data_replace.replace_time(data, quert_day)
+            if "time" in data:
+                data = data_replace.replace_time(data, quert_day)
+            if "hostname" in data:
+                data = data_replace.replace_data(data)
             data = eval(data)
     # 获取预期结果
     expected = eval(cases["expected"])
-    yield interface, casename, row, url, method, headers, request_type, data, expected, \
-          redis_client, ck_client, risk_table, sendrequest
+    yield module, interface, casename, row, url, method, headers, request_type, data, expected, \
+          redis_client, ck_client, risk_table, sendrequest, yaml_util
 
 
 

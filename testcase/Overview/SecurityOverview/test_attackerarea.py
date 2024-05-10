@@ -6,25 +6,21 @@
 import logging
 import pytest
 import allure
+from utils.allure_util import HandleAllure
 from utils.path_util import file_path
 from utils.excle_utli import HandleExcle
-from utils.send_request_util import SendRequest
-from utils.read_ini_util import HandleConf
-from utils.expected_util import HandlerExpected
-from utils.time_util import HandlerTime
-from utils.replace_data_util import HandleData
+
 
 @allure.epic("总览")
 class TestAttackerArea:
-    @allure.feature("安全总览")
     @pytest.mark.parametrize(argnames="cases", argvalues=HandleExcle(file_path() + "/data/SecurityOverview.xlsx", "attackerArea").read_data())
     def test_attackerarea(self, cases, start_up):
-        interface, casename, row, url, method, headers, request_type, data, expected, \
-        redis_client, ck_client, risk_table, sendrequest = start_up
+        module, interface, casename, row, url, method, headers, request_type, data, expected, \
+        redis_client, ck_client, risk_table, sendrequest, yaml_util = start_up
 
         # 动态设置报告
-        allure.dynamic.story(interface)
-        allure.dynamic.title(casename)
+        HandleAllure.dynamic_allure(feature=module, story=interface, title=casename)
+
         with allure.step("清空redis缓存"):
             if cases["redis_key"] != None:
                 redis_key = cases["redis_key"]
