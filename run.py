@@ -15,5 +15,5 @@ if __name__ == '__main__':
     # 清空临时变量文件内容
     empty_file("/cache/temp.yaml")
     pytest.main()
-    # os.system("copy environment.properties temp\environment.properties")
-    # os.system("allure generate temp -o report --clean")
+    os.system("copy environment.properties temp\environment.properties")
+    os.system("allure generate temp -o report --clean")
