@@ -5,6 +5,7 @@
 # @Project : prs_v5
 # conftest.py
 import logging
+import time
 import pytest
 import allure
 from utils.ck_query_util import HandlerCk
@@ -77,6 +78,37 @@ def start_up(cases):
     expected = eval(cases["expected"])
     yield module, interface, casename, row, url, method, headers, request_type, data, expected, \
           redis_client, ck_client, risk_table, sendrequest, yaml_util
+
+
+def pytest_terminal_summary(terminalreporter):
+
+    _TOTAL = terminalreporter._numcollected
+    _PASSED = len(terminalreporter.stats.get("passed", []))
+    _ERROR = len(terminalreporter.stats.get("error", []))
+    _FAILED = len(terminalreporter.stats.get("failed", []))
+    _SKIPPED = len(terminalreporter.stats.get("skipped", []))
+    _SUCCESS_RATE = round(_PASSED / _TOTAL * 100, 2)
+    duration = time.time() - terminalreporter._sessionstarttime
+    _TIMES = round(duration, 2)
+    result_data_test = {
+        "_TOTAL": _TOTAL,
+        "_PASSED": _PASSED,
+        "_ERROR": _ERROR,
+        "_FAILED": _FAILED,
+        "_SKIPPED": _SKIPPED,
+        "_SUCCESS_RATE": _SUCCESS_RATE,
+        "_TIMES": _TIMES
+    }
+    HandleData.post_pytest_summary(result_data_test)
+
+    logging.info("测试用例执行结果：{}".format(result_data_test))
+    logging.info("测试用例总数为：{}".format(_TOTAL))
+    logging.info("测试用例通过数为：{}".format(_PASSED))
+    logging.info("测试用例失败数为：{}".format(_FAILED))
+    logging.info("测试用例错误数为：{}".format(_ERROR))
+    logging.info("测试用例跳过数为：{}".format(_SKIPPED))
+    logging.info("测试用例成功率：{}%".format(_SUCCESS_RATE))
+    logging.info("测试用例执行时长为：{}秒".format(_TIMES))
 
 
 

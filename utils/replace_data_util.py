@@ -3,15 +3,22 @@
 # @Author : aiqinghua
 # @File : replace_data_util
 # @Project : prs_v5
+import logging
 import re
+from string import Template
+from utils.read_ini_util import HandleConf
 from utils.time_util import HandlerTime
 from utils.yaml_util import YamlUtil
+from utils.path_util import file_path
 
 
 class HandleData:
     """
     该类用于数据替换
     """
+    # 存放提取参数的池子
+    extra_pool = {}
+
     def __init__(self):
         self.risk_time = HandlerTime()
         self.start_time_mapping = {
@@ -72,33 +79,31 @@ class HandleData:
                 data = data.replace('${' + attr + '}', f'"{value}"')
 
         return data
-    # def replace_data(self, data):
-    #     print(data)
-    #     temp_conf = self.yaml_read.read_yaml()
-    #     while re.search('\${(.+?)}', data):
-    #         res = re.search('\${(.+?)}', data)
-    #     #     # 获取正则匹配到的数据
-    #         item = res.group()
-    #         print(item)
-    #         attr = res.group(1)
-    #         if attr == temp_conf[attr]:
-    #             pass
-    #     #     try:
-    #     #         # 获取类属性中需要被替换的值
-    #     #         pass
-    #     #         # value = getattr(cls, attr)
-    #     #     except AttributeError:
-    #     #         # 从配置文件中查找数据进行替换
-    #     #         pass
-    #         # 进行替换
-    #         # data = data.replace(item, str(value))
-    #     return data
+
+    @classmethod
+    def post_pytest_summary(cls, result_data_test):
+        cls.extra_pool.update(result_data_test)
+        cls.extra_pool.update({"PROJECT_NAME": HandleConf("/config/config.ini").get_str(section="server", option="project_name")})
+
+
+    @classmethod
+    def exchange_data(cls, filename):
+        with open(file_path() + filename, 'r', encoding='utf-8') as fp:
+            report_data = fp.read()
+        report_data = Template(report_data)
+        # 将用例结果添加到替换的数据池中
+        result_data = cls.extra_pool
+        # 进行字符串模版替换
+        report_data = report_data.safe_substitute(result_data)
+        logging.info("邮件内容为：{}".format(report_data))
+        return report_data
 
 if __name__ == '__main__':
     # data = '{"ts":[${start_time},${end_time}]}'
     # testtime = HandleData()
     # temp = testtime.replace_time(data, 7)
     # print(temp)
-    data = '{"ip":${hostname},"netcard":"","startTime":1714674441,"endTime":1714676241,"step":"20"}'
-    resp = HandleData()
-    print(resp.replace_data(data))
+    # data = '{"ip":${hostname},"netcard":"","startTime":1714674441,"endTime":1714676241,"step":"20"}'
+    # resp = HandleData()
+    # print(resp.replace_data(data))
+    print(HandleData.exchange_data())

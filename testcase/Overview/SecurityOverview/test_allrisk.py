@@ -23,14 +23,17 @@ class TestAllRisk:
             if cases["redis_key"] != None:
                 redis_key = cases["redis_key"]
                 redis_client.redis_del(keys=redis_key)
+                allure.attach(name="redis删除key", body=str(redis_key))
         with allure.step("发送请求"):
             response = sendrequest.all_send_request(method, url, request_type, data, headers)
             res = response
+            allure.attach(name="请求结果", body=str(res))
             logging.info("预期结果为：{}".format(expected))
         if cases["ck_check"] != None:
             with allure.step("进行ck查询"):
                 sql = cases["ck_check"]
                 ck_res = ck_client.ck_query_first_item(sql, table=risk_table)
+                allure.attach(name="ck查询结果", body=str(ck_res))
 
         try:
             with allure.step("进行接口断言"):

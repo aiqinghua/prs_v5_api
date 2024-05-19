@@ -22,13 +22,14 @@ class HandlerNotification:
         self.from_email = self.conf.get_str(section="qq_email", option="from_email")
         self.to_email = self.conf.get_str(section="qq_email", option="to_email")
         self.password = self.conf.get_str(section="qq_email", option="from_Authorization_code")
-    def send_email(self):
+        self.subject = self.conf.get_str(section="qq_email", option="subject")
+    def send_email(self, report_data):
         msg = MIMEMultipart()
         msg["From"] = self.from_email
         msg["To"] = self.to_email
-        msg["Subject"] = "python测试邮件"
-        body = "这是一个测试邮件"
-        text = MIMEText(body, "plain", "utf-8")
+        msg["Subject"] = self.subject
+        body = report_data
+        text = MIMEText(body, "html", "utf-8")
         msg.attach(text)
 
         # 添加附件
